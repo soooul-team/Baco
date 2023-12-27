@@ -1,0 +1,323 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model b_goods {
+  id             BigInt    @id @default(autoincrement())
+  view_id        String    @unique(map: "uniq_view_id") @db.VarChar(18)
+  name           String    @default("") @db.VarChar(64)
+  img_url        String    @default("") @db.VarChar(256)
+  remark         String    @default("") @db.VarChar(32)
+  type           Int?      @default(1) @db.SmallInt
+  original_price Decimal   @default(0.000000000) @db.Decimal(19, 9)
+  purchase_price Decimal   @default(0.000000000) @db.Decimal(19, 9)
+  object_id      BigInt    @default(0)
+  status         Int?      @default(1) @db.SmallInt
+  create_time    DateTime? @default(now()) @db.DateTime(0)
+  update_time    DateTime? @default(now()) @db.DateTime(0)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model b_goods_condition {
+  id          BigInt    @id @default(autoincrement())
+  view_id     String    @unique(map: "uniq_view_id") @db.VarChar(18)
+  name        String    @default("") @db.VarChar(64)
+  goods_id    String    @default("") @db.VarChar(18)
+  condition   BigInt    @default(0)
+  remark      String    @default("") @db.VarChar(32)
+  status      Int?      @default(1) @db.SmallInt
+  create_time DateTime? @default(now()) @db.DateTime(0)
+  update_time DateTime? @default(now()) @db.DateTime(0)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model b_order {
+  id           BigInt    @id @default(autoincrement())
+  view_id      String    @unique(map: "uniq_view_id") @db.VarChar(18)
+  goods_id     String    @default("") @db.VarChar(18)
+  remark       String    @default("") @db.VarChar(2550)
+  type         Int?      @default(1) @db.SmallInt
+  status       Int?      @default(1) @db.SmallInt
+  create_time  DateTime? @default(now()) @db.DateTime(0)
+  update_time  DateTime? @default(now()) @db.DateTime(0)
+  amount       Decimal   @default(0.000000000) @db.Decimal(19, 9)
+  amount_type  Int?      @default(1) @db.SmallInt
+  amount_unit  String    @default("") @db.VarChar(32)
+  user_view_id String    @default("") @db.VarChar(18)
+  amount_pre   Decimal   @default(0.000000000) @db.Decimal(19, 9)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model b_pattern {
+  id          BigInt    @id @default(autoincrement())
+  view_id     String    @unique(map: "uniq_view_id") @db.VarChar(18)
+  img_url     String    @default("") @db.VarChar(256)
+  remark      String    @default("") @db.VarChar(32)
+  status      Int?      @default(1) @db.SmallInt
+  create_time DateTime? @default(now()) @db.DateTime(0)
+  update_time DateTime? @default(now()) @db.DateTime(0)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model s_user {
+  id             BigInt    @id @default(autoincrement())
+  view_id        String    @unique(map: "uniq_view_id") @db.VarChar(18)
+  first_name     String    @default("") @db.VarChar(16)
+  end_name       String    @default("") @db.VarChar(16)
+  pattern        String    @default("") @db.VarChar(18)
+  email          String    @unique(map: "uniq_email") @default("") @db.VarChar(32)
+  token          String    @default("") @db.VarChar(16)
+  remark         String    @default("") @db.VarChar(32)
+  status         Int?      @default(1) @db.SmallInt
+  create_time    DateTime? @default(now()) @db.DateTime(0)
+  update_time    DateTime? @default(now()) @db.DateTime(0)
+  payment_step   Int?      @default(0) @db.SmallInt
+  wallet_address String    @default("") @db.VarChar(48)
+  role_vid       String    @default("") @db.VarChar(18)
+  avatar         String    @default("") @db.VarChar(255)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model s_user_login_account {
+  id           BigInt    @id @default(autoincrement())
+  user_view_id String    @unique(map: "uniq_view_id") @db.VarChar(18)
+  account      String    @unique(map: "uniq_account") @db.VarChar(32)
+  password     String    @db.VarChar(16)
+  status       Int?      @default(1) @db.SmallInt
+  create_time  DateTime? @default(now()) @db.DateTime(0)
+  update_time  DateTime? @default(now()) @db.DateTime(0)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model s_user_login_access_code {
+  id           BigInt    @id @default(autoincrement())
+  user_view_id String    @unique(map: "uniq_view_id") @db.VarChar(18)
+  access_code  String    @unique(map: "uniq_access") @db.VarChar(32)
+  status       Int?      @default(1) @db.SmallInt
+  create_time  DateTime? @default(now()) @db.DateTime(0)
+  update_time  DateTime? @default(now()) @db.DateTime(0)
+  account      String    @default("") @db.VarChar(32)
+  password     String    @default("") @db.VarChar(16)
+}
+
+model b_promo_info_collection {
+  id          BigInt    @id @default(autoincrement())
+  source      String    @default("") @db.VarChar(16)
+  vip_code    String    @default("") @db.VarChar(32)
+  name        String    @default("") @db.VarChar(32)
+  email       String    @default("") @db.VarChar(64)
+  remark      String    @default("") @db.VarChar(64)
+  status      Int?      @default(1) @db.SmallInt
+  create_time DateTime? @default(now()) @db.DateTime(0)
+  update_time DateTime? @default(now()) @db.DateTime(0)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model s_email {
+  id          BigInt    @id @default(autoincrement())
+  view_id     String    @unique(map: "uniq_view_id") @db.VarChar(18)
+  content     String    @default("") @db.VarChar(512)
+  remark      String    @default("") @db.VarChar(32)
+  type        Int?      @default(1) @db.SmallInt
+  status      Int?      @default(1) @db.SmallInt
+  create_time DateTime? @default(now()) @db.DateTime(0)
+  update_time DateTime? @default(now()) @db.DateTime(0)
+  email       String    @default("") @db.VarChar(64)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model s_auth_role {
+  id          BigInt    @id @default(autoincrement())
+  view_id     String    @unique(map: "uniq_view_id") @db.VarChar(18)
+  name        String    @default("") @db.VarChar(32)
+  auth_ids    String    @default("") @db.VarChar(18)
+  desc        String    @default("") @db.VarChar(255)
+  sort        Int?      @default(1)
+  status      Int?      @default(1) @db.SmallInt
+  remark      String    @default("") @db.VarChar(32)
+  create_time DateTime? @default(now()) @db.DateTime(0)
+  update_time DateTime? @default(now()) @db.DateTime(0)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model s_auth_permission {
+  id          BigInt    @id @default(autoincrement())
+  view_id     String    @unique(map: "uniq_view_id") @db.VarChar(18)
+  pid         String    @default("") @db.VarChar(18)
+  name        String    @default("") @db.VarChar(255)
+  icon        String    @default("") @db.VarChar(255)
+  url         String    @default("") @db.VarChar(255)
+  remark      String    @default("") @db.VarChar(32)
+  sort        Int?      @default(1)
+  type        Int?      @default(1) @db.SmallInt
+  status      Int?      @default(1) @db.SmallInt
+  create_time DateTime? @default(now()) @db.DateTime(0)
+  update_time DateTime? @default(now()) @db.DateTime(0)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model s_auth_role_permission {
+  id            BigInt    @id @default(autoincrement())
+  view_vid      String    @unique(map: "uniq_view_id") @db.VarChar(18)
+  role_vid      String    @default("") @db.VarChar(18)
+  permission_id String    @default("") @db.VarChar(18)
+  remark        String    @default("") @db.VarChar(32)
+  status        Int?      @default(1) @db.SmallInt
+  create_time   DateTime? @default(now()) @db.DateTime(0)
+  update_time   DateTime? @default(now()) @db.DateTime(0)
+}
+
+model b_crypto_token {
+  id          BigInt    @id @default(autoincrement())
+  name        String    @default("") @db.VarChar(16)
+  price       Decimal   @default(0.00) @db.Decimal(16, 2)
+  status      Int?      @default(1) @db.SmallInt
+  create_time DateTime? @default(now()) @db.DateTime(0)
+  update_time DateTime? @default(now()) @db.DateTime(0)
+}
+
+model b_invoice {
+  id            BigInt    @id @default(autoincrement())
+  price_id      BigInt    @default(-1)
+  user_view_vid String    @default("") @db.VarChar(18)
+  status        Int?      @default(1) @db.SmallInt
+  create_time   DateTime? @default(now()) @db.DateTime(0)
+  update_time   DateTime? @default(now()) @db.DateTime(0)
+}
+
+model b_token_uri {
+  id               BigInt    @id @default(autoincrement())
+  pattern_view_vid String    @default("") @db.VarChar(18)
+  status           Int?      @default(1) @db.SmallInt
+  create_time      DateTime? @default(now()) @db.DateTime(0)
+  update_time      DateTime? @default(now()) @db.DateTime(0)
+  metadata         String    @default("") @db.VarChar(2550)
+}
+
+model b_utility {
+  id                 BigInt    @id @default(autoincrement())
+  view_id            String    @unique(map: "uniq_view_id") @default("") @db.VarChar(18)
+  status             Int?      @default(1) @db.SmallInt
+  create_time        DateTime? @default(now()) @db.DateTime(0)
+  update_time        DateTime? @default(now()) @db.DateTime(0)
+  start_time         DateTime? @default(now()) @db.DateTime(0)
+  end_time           DateTime? @default(now()) @db.DateTime(0)
+  title              String    @default("") @db.VarChar(255)
+  sub_title          String    @default("") @db.VarChar(255)
+  details            String    @default("") @db.VarChar(2550)
+  current_price      Decimal   @default(0.00) @db.Decimal(16, 2)
+  original_price     Decimal   @default(0.00) @db.Decimal(16, 2)
+  imgs               String    @db.LongText
+  end_of_sale_time   DateTime? @default(now()) @db.DateTime(0)
+  start_of_sale_time DateTime? @default(now()) @db.DateTime(0)
+  contract_address   String    @default("") @db.VarChar(50)
+  contract_name      String    @default("") @db.VarChar(64)
+  end_date           DateTime? @default(now()) @db.DateTime(0)
+  start_date         DateTime? @default(now()) @db.DateTime(0)
+}
+
+model b_utility_score {
+  id              BigInt    @id @default(autoincrement())
+  view_id         String    @unique(map: "uniq_view_id") @db.VarChar(18)
+  utility_view_id String    @default("") @db.VarChar(18)
+  status          Int?      @default(1) @db.SmallInt
+  score           Int?      @default(0) @db.SmallInt
+  create_time     DateTime? @default(now()) @db.DateTime(0)
+  update_time     DateTime? @default(now()) @db.DateTime(0)
+}
+
+model b_utility_tag {
+  id          BigInt    @id @default(autoincrement())
+  view_id     String    @unique(map: "uniq_view_id") @db.VarChar(18)
+  status      Int?      @default(1) @db.SmallInt
+  create_time DateTime? @default(now()) @db.DateTime(0)
+  update_time DateTime? @default(now()) @db.DateTime(0)
+  sort        Int?      @default(0) @db.SmallInt
+  text        String    @default("") @db.VarChar(255)
+}
+
+model b_utility_utility_tag {
+  id              BigInt    @id @default(autoincrement())
+  view_id         String    @unique(map: "uniq_view_id") @db.VarChar(18)
+  status          Int?      @default(1) @db.SmallInt
+  create_time     DateTime? @default(now()) @db.DateTime(0)
+  update_time     DateTime? @default(now()) @db.DateTime(0)
+  tag_view_id     String    @default("") @db.VarChar(18)
+  utility_view_id String    @default("") @db.VarChar(18)
+}
+
+model b_utility_commission_middleman_utility {
+  id              BigInt    @id @default(autoincrement())
+  user_view_id    String    @default("") @db.VarChar(18)
+  utility_view_id String    @default("") @db.VarChar(18)
+  status          Int?      @default(1) @db.SmallInt
+  create_time     DateTime? @default(now()) @db.DateTime(0)
+  update_time     DateTime? @default(now()) @db.DateTime(0)
+  view_id         String    @unique(map: "uniq_view_id") @db.VarChar(18)
+  percent         Int?      @default(0) @db.SmallInt
+}
+
+model b_utility_user {
+  id              BigInt    @id @default(autoincrement())
+  view_id         String    @unique(map: "uniq_view_id") @db.VarChar(18)
+  user_view_id    String    @default("") @db.VarChar(18)
+  utility_view_id String    @default("") @db.VarChar(18)
+  status          Int?      @default(1) @db.SmallInt
+  create_time     DateTime? @default(now()) @db.DateTime(0)
+  update_time     DateTime? @default(now()) @db.DateTime(0)
+}
+
+model b_utility_dynamic_history {
+  id           BigInt    @id @default(autoincrement())
+  user_vid     String    @default("") @db.VarChar(18)
+  utility_vid  String    @default("") @db.VarChar(18)
+  token_uri_id BigInt    @default(0)
+  status       Int?      @default(1) @db.SmallInt
+  create_time  DateTime? @default(now()) @db.DateTime(0)
+  update_time  DateTime? @default(now()) @db.DateTime(0)
+}
+
+model baco_users {
+  id           BigInt    @id @default(autoincrement())
+  user_vid     String    @default("") @db.VarChar(18)
+  name         String    @default("") @db.VarChar(18)
+  token_uri_id BigInt    @default(0)
+  status       Int?      @default(1) @db.SmallInt
+  create_time  DateTime? @default(now()) @db.DateTime(0)
+  update_time  DateTime? @default(now()) @db.DateTime(0)
+}
+
+model baco_orders {
+  id           BigInt    @id @default(autoincrement())
+  user_vid     String    @default("") @db.VarChar(18)
+  utility_vid  String    @default("") @db.VarChar(18)
+  token_uri_id BigInt    @default(0)
+  status       Int?      @default(1) @db.SmallInt
+  create_time  DateTime? @default(now()) @db.DateTime(0)
+  update_time  DateTime? @default(now()) @db.DateTime(0)
+}
+
+model baco_products {
+  id           BigInt    @id @default(autoincrement())
+  user_vid     String    @default("") @db.VarChar(18)
+  utility_vid  String    @default("") @db.VarChar(18)
+  token_uri_id BigInt    @default(0)
+  status       Int?      @default(1) @db.SmallInt
+  create_time  DateTime? @default(now()) @db.DateTime(0)
+  update_time  DateTime? @default(now()) @db.DateTime(0)
+}
+
+model baco_address {
+  id          BigInt    @id @default(autoincrement())
+  user_vid    String    @default("") @db.VarChar(18)
+  address     String    @default("") @db.VarChar(512)
+  status      Int?      @default(1) @db.SmallInt
+  create_time DateTime? @default(now()) @db.DateTime(0)
+  update_time DateTime? @default(now()) @db.DateTime(0)
+}
