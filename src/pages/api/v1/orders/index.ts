@@ -4,6 +4,7 @@ import "@/pages/api/utils/patch/bigint_patch";
 import "@/pages/api/utils/generation/generator"
 import Generator from "@/pages/api/utils/generation/generator";
 import HttpCode from "@/pages/api/utils/http_code";
+import StatusCode from "@/pages/api/utils/status_code";
 
 export default async function handler(
     req: NextApiRequest,
@@ -12,43 +13,43 @@ export default async function handler(
     const {method} = req;
     switch (method) {
         case "GET":
-            await  prisma.b_order.findMany({
+            await prisma.baco_orders.findMany({
                     where: {
                         status: {
                             not: 0
                         }
                     }
                 }
-            ).then((value:any) => {
+            ).then((value: any) => {
                 res.status(HttpCode.OK).json({code: HttpCode.OK, msg: "success", data: {data: value}});
-            }).catch((reason:any) => {
+            }).catch((reason: any) => {
                 res.status(HttpCode.OK).json({code: 500, msg: "server error", data: {data: reason}});
             });
             break;
         case "POST":
-            const {img_url, name, remark, type, object_id, original_price, purchase_price} = req.body;
+            const {user_vid, address_vid, product_vid} = req.body;
             let new_view_id = Generator.viewIdGenerate();
-            await prisma.b_goods.create({
+            await prisma.baco_orders.create({
                 data: {
                     view_id: new_view_id,
-                    name: `${name}`,
-                    img_url: `${img_url}`,
-                    type: type,
-                    original_price: original_price,
-                    purchase_price: purchase_price,
-                    object_id: object_id,
-                    remark: `${remark}`,
-                    status: 1,
+                    user_vid: `${user_vid}`,
+                    address_vid: `${address_vid}`,
+                    product_vid: `${product_vid}`,
+                    status: StatusCode.NORMAL,
                 }
-            }).then((value:any) => {
+            }).then((value: any) => {
                 res.status(HttpCode.OK).json({code: HttpCode.OK, msg: "success", data: {data: value}});
-            }).catch((reason:any) => {
+            }).catch((reason: any) => {
                 res.status(HttpCode.OK).json({code: 500, msg: "server error", data: {data: reason}});
             });
             break;
         default:
             res.setHeader("Allow", ["GET", "POST"]);
-            res.status(HttpCode.OK).json({code: HttpCode.ERROR_REQUEST_METHOD_CODE, msg: HttpCode.ERROR_REQUEST_METHOD_MSG, data: {}});
+            res.status(HttpCode.OK).json({
+                code: HttpCode.ERROR_REQUEST_METHOD_CODE,
+                msg: HttpCode.ERROR_REQUEST_METHOD_MSG,
+                data: {}
+            });
             break;
     }
 }

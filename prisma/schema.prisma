@@ -284,40 +284,46 @@ model b_utility_dynamic_history {
 }
 
 model baco_users {
-  id           BigInt    @id @default(autoincrement())
-  user_vid     String    @default("") @db.VarChar(18)
-  name         String    @default("") @db.VarChar(18)
-  token_uri_id BigInt    @default(0)
-  status       Int?      @default(1) @db.SmallInt
-  create_time  DateTime? @default(now()) @db.DateTime(0)
-  update_time  DateTime? @default(now()) @db.DateTime(0)
-}
-
-model baco_orders {
-  id           BigInt    @id @default(autoincrement())
-  user_vid     String    @default("") @db.VarChar(18)
-  utility_vid  String    @default("") @db.VarChar(18)
-  token_uri_id BigInt    @default(0)
-  status       Int?      @default(1) @db.SmallInt
-  create_time  DateTime? @default(now()) @db.DateTime(0)
-  update_time  DateTime? @default(now()) @db.DateTime(0)
-}
-
-model baco_products {
-  id           BigInt    @id @default(autoincrement())
-  user_vid     String    @default("") @db.VarChar(18)
-  utility_vid  String    @default("") @db.VarChar(18)
-  token_uri_id BigInt    @default(0)
-  status       Int?      @default(1) @db.SmallInt
-  create_time  DateTime? @default(now()) @db.DateTime(0)
-  update_time  DateTime? @default(now()) @db.DateTime(0)
-}
-
-model baco_address {
   id          BigInt    @id @default(autoincrement())
-  user_vid    String    @default("") @db.VarChar(18)
-  address     String    @default("") @db.VarChar(512)
+  view_id     String    @unique(map: "uniq_view_id") @default("") @db.VarChar(18)
+  account     String    @unique(map: "uniq_account") @default("") @db.VarChar(18)
+  password    String    @default("") @db.VarChar(18)
+  name        String    @default("") @db.VarChar(18)
+  avatar      String    @default("") @db.VarChar(512)
   status      Int?      @default(1) @db.SmallInt
   create_time DateTime? @default(now()) @db.DateTime(0)
   update_time DateTime? @default(now()) @db.DateTime(0)
+}
+
+model baco_orders {
+  id          BigInt    @id @default(autoincrement())
+  view_id     String    @unique(map: "uniq_view_id") @default("") @db.VarChar(18)
+  user_vid    String    @default("") @db.VarChar(18)
+  address_vid String    @default("") @db.VarChar(18)
+  product_vid String    @default("") @db.VarChar(18)
+  status      Int?      @default(1) @db.SmallInt
+  create_time DateTime? @default(now()) @db.DateTime(0)
+  update_time DateTime? @default(now()) @db.DateTime(0)
+}
+
+model baco_products {
+  id          BigInt    @id @default(autoincrement())
+  view_id     String    @unique(map: "uniq_view_id") @default("") @db.VarChar(18)
+  title       String    @default("") @db.VarChar(128)
+  imgs        String    @default("") @db.VarChar(5120)
+  info        String    @default("") @db.VarChar(1024)
+  price       Decimal   @default(0.00) @db.Decimal(19, 2)
+  status      Int?      @default(1) @db.SmallInt
+  create_time DateTime? @default(now()) @db.DateTime(0)
+  update_time DateTime? @default(now()) @db.DateTime(0)
+}
+
+model baco_address {
+  id           BigInt    @id @default(autoincrement())
+  view_id      String    @unique(map: "uniq_view_id") @default("") @db.VarChar(18)
+  user_view_id String    @default("") @db.VarChar(18)
+  address      String    @default("") @db.VarChar(512)
+  status       Int?      @default(1) @db.SmallInt
+  create_time  DateTime? @default(now()) @db.DateTime(0)
+  update_time  DateTime? @default(now()) @db.DateTime(0)
 }

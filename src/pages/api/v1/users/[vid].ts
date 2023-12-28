@@ -12,45 +12,44 @@ export default async function handler(
     const {vid} = req.query;
     switch (method) {
         case "GET":
-            // await prisma.b_goods_condition.findMany();
-            await prisma.b_goods.findFirst({
+            await prisma.baco_users.findFirst({
                     where: {
                         status: {
                             not: 0
                         },
+                        view_id: `${vid}`
                     }
                 }
-            ).then((value:any) => {
+            ).then((value: any) => {
                 res.status(HttpCode.OK).json({code: HttpCode.OK, msg: "success", data: {data: value}});
-            }).catch((reason:any) => {
+            }).catch((reason: any) => {
                 res.status(HttpCode.OK).json({code: 500, msg: "server error", data: {data: reason}});
             });
             break;
         case "PUT":
-            const {name, img_url, remark, type, object_id, status, original_price, purchase_price} = req.body;
-            await prisma.b_goods.update({
+            const {name, avatar,status} = req.body;
+            await prisma.baco_users.update({
                 where: {
                     view_id: `${vid}`,
                 },
                 data: {
                     name: `${name}`,
-                    img_url: `${img_url}`,
-                    original_price: original_price,
-                    purchase_price: purchase_price,
-                    type: type,
-                    object_id: object_id,
-                    status: status,
-                    remark: `${remark}`,
+                    avatar: `${avatar}`,
+                    status: status
                 }
-            }).then((value:any) => {
+            }).then((value: any) => {
                 res.status(HttpCode.OK).json({code: HttpCode.OK, msg: "success", data: {data: value}});
-            }).catch((reason:any) => {
+            }).catch((reason: any) => {
                 res.status(HttpCode.OK).json({code: HttpCode.ERROR, msg: "server error", data: {data: reason}});
             });
             break;
         default:
             res.setHeader("Allow", ["GET", "PUT"]);
-            res.status(HttpCode.OK).json({code: HttpCode.ERROR_REQUEST_METHOD_CODE, msg: HttpCode.ERROR_REQUEST_METHOD_MSG, data: {}});
+            res.status(HttpCode.OK).json({
+                code: HttpCode.ERROR_REQUEST_METHOD_CODE,
+                msg: HttpCode.ERROR_REQUEST_METHOD_MSG,
+                data: {}
+            });
             break;
     }
 }
